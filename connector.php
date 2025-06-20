@@ -4,7 +4,7 @@
 
 $usuario = "root";
 $senha = "";
-$dbname = "respostas";
+$dbname = "answer";
 $host = "localhost";
 
 try{
