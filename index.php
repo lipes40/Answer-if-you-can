@@ -4,16 +4,8 @@ require('connector.php');
 
 session_start();
 
-if(!isset($_SESSION["vez"])){
-    
-    $_SESSION["vez"] = 0;
-}
-
-else{
-    $error = "";
-}
-
 $error = "";
+
 
 $sql = "SELECT id FROM resp";
 $stmt = $pdo->prepare($sql);
@@ -21,11 +13,12 @@ $stmt->execute();
 
 $ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-if(MAX($ids) <= $_SESSION["vez"]) {
-    //$_SESSION["vez"] = 0;
-    session_destroy();
-    Header("Location: index.php");
-    exit;
+$minimo = min($ids) -1;
+$maximo = max($ids) -1;
+
+if(!isset($_SESSION["vez"])){
+    
+    $_SESSION["vez"] = rand($minimo, $maximo);
 }
 
 
@@ -34,10 +27,6 @@ $id = $ids[$_SESSION["vez"]];
 $sql = "SELECT * FROM resp WHERE id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$id]);
-
-$_SESSION["vez"] == 0;
-
-
 
 $conjunto = $stmt->fetch();
 
@@ -54,16 +43,24 @@ if(isset($_POST["resposta"])){
     else{
         $tentativa = $_POST["resposta"];
         if($tentativa == $resposta) {
-            $_POST["resposta"] = null;
-            $_SESSION["vez"] += 1;
-            sleep(1);
+            $_POST["resposta"] = null; 
+            $num = $_SESSION["vez"];
+
+            while($num == $_SESSION["vez"]){
+                $num = rand($minimo, $maximo);
+            }
+
+            $_SESSION["vez"] = $num;
+
             $error = "Acertou";
-            Header("Location: index.php");
+
+            flush();
+            echo "<script> window.location.href = 'index.php' </script>";
             exit;
         }
 
         else{
-            $error = "Errou";
+            $error = "Errado";
         }
 
     }
@@ -109,6 +106,8 @@ if(isset($_POST["resposta"])){
 
         a{
             color: black;
+            position: absolute;
+            bottom: 20px;
         }
 
     </style>
@@ -131,6 +130,8 @@ if(isset($_POST["resposta"])){
         <button type="submit">Enviar</button>
     </form>
         <span><?php if($error != "") { echo $error; } ?></span>
+
+        <button onclick="executar()">Pular pergunta</button>
 
 
         <a href="criar_pergunta.php">Crie sua pergunta!</a>

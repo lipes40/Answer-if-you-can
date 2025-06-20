@@ -12,11 +12,21 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         die("Você não é o ADM seu coco");
     }
 
-    $sql = ("INSERT INTO resp (nome, pergunta, resposta, lingua) VALUES (?, ?, ?, ?)");
+    $sql = ("SELECT id FROM resp");
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$nome, $pergunta, $resposta, $lingua]);
+    $stmt->execute();
 
-    Header("Location: index.php");
+    $conjunto = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+    $id = max($conjunto) + 1;
+
+    $sql = ("INSERT INTO resp (id, nome, pergunta, resposta, lingua) VALUES (?, ?, ?, ?, ?)");
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$id, $nome, $pergunta, $resposta, $lingua]);
+
+    sleep(2);
+
+    echo "<script> window.location.href = 'index.php' </script>";
     exit;
 }
 
@@ -25,3 +35,26 @@ else{
 }
 
 ?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pergunta criada com sucesso!</title>
+    <style>
+        body{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sua pergunta foi criada e logo mais aparecerá</h1>
+</body>
+    <script>
+        sleep(2)
+        window.location.href = 'index.php';
+    </script>
+</html>
