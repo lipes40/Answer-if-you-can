@@ -21,7 +21,12 @@ $stmt->execute();
 
 $ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-//echo $vez;
+if(MAX($ids) <= $_SESSION["vez"]) {
+    //$_SESSION["vez"] = 0;
+    session_destroy();
+    Header("Location: index.php");
+    exit;
+}
 
 
 $id = $ids[$_SESSION["vez"]];
@@ -29,6 +34,10 @@ $id = $ids[$_SESSION["vez"]];
 $sql = "SELECT * FROM resp WHERE id = ?";
 $stmt = $pdo->prepare($sql);
 $stmt->execute([$id]);
+
+$_SESSION["vez"] == 0;
+
+
 
 $conjunto = $stmt->fetch();
 
@@ -98,6 +107,10 @@ if(isset($_POST["resposta"])){
             top: 20px;
         }
 
+        a{
+            color: black;
+        }
+
     </style>
 
 
@@ -120,5 +133,6 @@ if(isset($_POST["resposta"])){
         <span><?php if($error != "") { echo $error; } ?></span>
 
 
+        <a href="criar_pergunta.php">Crie sua pergunta!</a>
 </body>
 </html>
