@@ -27,9 +27,9 @@
 <body>
     <header><h1>Crate a Question!</h1></header>
 
-    <form action="">
+    <form action="pergunta_criada.php" method="POST">
         <input type="text" placeholder="Nome" name="nome">
-        <input type="text" placeholder="Pergunta">
+        <input type="text" placeholder="Pergunta" name="pergunta">
         <input type="text" placeholder="Resposta" name="resposta">
         <button type=>Enviar</button>
     </form>
