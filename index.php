@@ -95,7 +95,7 @@ if(isset($_POST["resposta"])){
         <em>Creator, back end maker and database analitics</em><br>
             <a href="https://github.com/lipes40" target="_blank" rel="noopener noreferrer">Github</a>
         </p>
-    <button onclick="fecharModal()" class="btn-fechar">Fechar</button>
+    <button onclick="fecharModal()" class="btn-fechar">Close </button>
   </div>
 </div>
 

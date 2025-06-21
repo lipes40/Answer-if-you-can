@@ -62,16 +62,15 @@ if(isset($_POST["nome"]) && isset($_POST["pergunta"]) && isset($_POST["resposta"
 <body>
     <header><h1>Create a Question</h1></header>
 
-    <form action="" method="POST" onsubmit="return finalizar()">
+    <form action="" method="POST">
         <input type="text" maxlength="40" placeholder="Nome" id="nome" name="nome" value="<?php echo $_POST["nome"] ?? '' ?>">
         <input type="text" maxlength="200" placeholder="Pergunta" id="pergunta" name="pergunta" value="<?php echo $_POST["pergunta"] ?? '' ?>">
         <input type="text" maxlength="200" placeholder="Resposta" id="resposta" name="resposta" value="<?php echo $_POST["resposta"] ?? '' ?>">
-        <button type=>Enviar</button>
+        <button type=>Send <i class="fas fa-paper-plane"></i></button>
     </form>
     <span><?php echo $error; ?></span>
 
     <a class="back-btn" href="index.php">Back</a>
 
-    <footer>&copy; 2025 Made by Fellipe Teixeira and Felipe Falcirolli.</footer>
 </body>
 </html>
