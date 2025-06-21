@@ -115,7 +115,7 @@ if(isset($_POST["resposta"])){
     </form>
         <span><?php if($error != "") { echo $error; } ?></span>
 
-        <button onclick="executar()">Pular pergunta</button>
+        <a href="pular_pergunta.php"><button type="submit" name="pular">Pular pergunta</button></a>
 
 
         <a href="criar_pergunta.php" class="criar-pergunta">Crie sua pergunta!</a>

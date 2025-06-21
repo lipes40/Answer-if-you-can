@@ -1,7 +1,51 @@
 <?php
 
+require("connector.php");
 
+$error = "";
 
+if(isset($_POST["nome"]) && isset($_POST["pergunta"]) && isset($_POST["resposta"])){
+    if(strlen($_POST["nome"]) == 0) {
+        $error = "Preencha seu nome!";
+    }
+    else{
+        if(strlen($_POST["pergunta"]) == 0){
+            $error = "Preencha a pergunta!";
+        }
+        else{
+            if(strlen($_POST["resposta"]) == 0){
+                $error = "Preencha a resposta!"; 
+            }
+            else{
+
+                $nome = $_POST["nome"];
+                $pergunta = $_POST["pergunta"];
+                $resposta = $_POST["resposta"];
+                $lingua = "Português";
+
+                if($nome == "ADM") {
+                    die("Você não é o ADM seu coco");
+                }
+
+                $sql = ("SELECT id FROM resp");
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute();
+
+                $conjunto = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+                $id = max($conjunto) + 1;
+
+                $sql = ("INSERT INTO resp (id, nome, pergunta, resposta, lingua) VALUES (?, ?, ?, ?, ?)");
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$id, $nome, $pergunta, $resposta, $lingua]);
+
+                Header("Location: index.php");
+                exit;
+            }
+
+        }
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -18,65 +62,16 @@
 <body>
     <header><h1>Create a Question</h1></header>
 
-
-    <form action="pergunta_criada.php" method="POST">
-        <input type="text" placeholder="Nome" name="nome">
-        <input type="text" placeholder="Pergunta" name="pergunta">
-        <input type="text" placeholder="Resposta" name="resposta">
-        <button type=>Send <i class="fas fa-paper-plane"></i></button>
-    </form>
-
-    <a class="back-btn" href="index.php">Back</a>
-
-    <footer>&copy; 2025 Made by Fellipe Teixeira and Felipe Falcirolli.</footer>
-
-    <form action="pergunta_criada.php" method="POST" onsubmit="return finalizar()">
+    <form action="" method="POST" onsubmit="return finalizar()">
         <input type="text" maxlength="40" placeholder="Nome" id="nome" name="nome" value="<?php echo $_POST["nome"] ?? '' ?>">
         <input type="text" maxlength="200" placeholder="Pergunta" id="pergunta" name="pergunta" value="<?php echo $_POST["pergunta"] ?? '' ?>">
         <input type="text" maxlength="200" placeholder="Resposta" id="resposta" name="resposta" value="<?php echo $_POST["resposta"] ?? '' ?>">
         <button type=>Enviar</button>
     </form>
+    <span><?php echo $error; ?></span>
 
-    <a href="index.php">Deixa pra lá! Quero mesmo é responder</a>
+    <a class="back-btn" href="index.php">Back</a>
+
+    <footer>&copy; 2025 Made by Fellipe Teixeira and Felipe Falcirolli.</footer>
 </body>
-
-<script>
-
-    const nome = document.getElementById("nome");
-    const pergunta = document.getElementById("pergunta");
-    const resposta = document.getElementById("resposta");
-
-    function finalizar() {
-        if(!nome.value){
-            alert("Digite seu nome")
-            alert(nome)
-            return false;
-        }
-
-        if(nome.value.length >= 40){
-            alert("Nome inválido")
-        }
-
-        if(!pergunta.value){
-            alert("Digite a sua pergunta")
-            return false;
-        }
-
-        if(pergunta.value.length >= 200){
-            alert("Pergunta inválida")
-        }
-
-        if(!resposta.value){
-            alert("Digite a sua resposta")
-            return false;
-        }
-
-        if(resposta.value.length >= 200){
-            alert("Resposta inválida")
-        }
-
-        return true;
-    }
-</script>
-
 </html>
