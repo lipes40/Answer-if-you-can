@@ -6,15 +6,22 @@ session_start();
 
 $error = "";
 
+$lingua = "Português";
 
-$sql = "SELECT id FROM resp";
+$sql = "SELECT id FROM resp WHERE lingua = ?";
 $stmt = $pdo->prepare($sql);
-$stmt->execute();
+$stmt->execute([$lingua]);
 
 $ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-$minimo = min($ids) -1;
-$maximo = max($ids) -1;
+$i = -1;
+
+foreach ($ids as $valor) {
+    $i++;
+}
+
+$minimo = 0;
+$maximo = $i;
 
 if(!isset($_SESSION["vez"])){
     
