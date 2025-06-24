@@ -14,11 +14,7 @@ $stmt->execute([$lingua]);
 
 $ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-$i = -1;
-
-foreach ($ids as $valor) {
-    $i++;
-}
+$i = count($ids) - 1;
 
 $minimo = 0;
 $maximo = $i;
