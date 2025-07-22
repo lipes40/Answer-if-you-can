@@ -1,77 +1,73 @@
 <?php 
 
-require('connector.php');
+    require('connector.php');
 
-session_start();
+    session_start();
 
-$error = "";
+    $error = "";
 
-$lingua = "Português";
+    $lingua = "Português";
 
-$sql = "SELECT id FROM resp WHERE lingua = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$lingua]);
+    $sql = "SELECT id FROM resp WHERE lingua = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$lingua]);
 
-$ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    $ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-$i = -1;
+    $i = count($ids) - 1;
 
-foreach ($ids as $valor) {
-    $i++;
-}
+    $minimo = 0;    
+    $maximo = $i;
 
-$minimo = 0;
-$maximo = $i;
-
-if(!isset($_SESSION["vez"])){
-    
-    $_SESSION["vez"] = rand($minimo, $maximo);
-}
-
-
-$id = $ids[$_SESSION["vez"]];
-
-$sql = "SELECT * FROM resp WHERE id = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$id]);
-
-$conjunto = $stmt->fetch();
-
-$pergunta = $conjunto['pergunta'];
-$resposta = $conjunto['resposta'];
-$lingua = $conjunto['lingua'];
-$nome = $conjunto['nome'];
-
-
-if(isset($_POST["resposta"])){
-    if(strlen($_POST["resposta"]) == 0){
-        $error = "Preencha sua resposta!";
+    if(!isset($_SESSION["vez"])){
+        
+        $_SESSION["vez"] = rand($minimo, $maximo);
     }
-    else{
-        $tentativa = $_POST["resposta"];
-        if($tentativa == $resposta) {
-            $_POST["resposta"] = null; 
-            $num = $_SESSION["vez"];
 
-            while($num == $_SESSION["vez"]){
-                $num = rand($minimo, $maximo);
+
+    $id = $ids[$_SESSION["vez"]];
+
+    $sql = "SELECT * FROM resp WHERE id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$id]);
+
+    $conjunto = $stmt->fetch();
+
+    $pergunta = $conjunto['pergunta'];
+    $resposta = $conjunto['resposta'];
+    $lingua = $conjunto['lingua'];
+    $nome = $conjunto['nome'];
+
+
+    if(isset($_POST["resposta"])){
+        if(strlen($_POST["resposta"]) == 0){
+            $error = "Preencha sua resposta!";
+        }
+        else{
+            $tentativa = $_POST["resposta"];
+            if($tentativa == $resposta) {
+                $_POST["resposta"] = null; 
+                $num = $_SESSION["vez"];
+
+                while($num == $_SESSION["vez"]){
+                    $num = rand($minimo, $maximo);
+                }
+
+                $_SESSION["vez"] = $num;
+
+                $error = "Acertou";
+
+                flush();
+                echo "<script> window.location.href = 'index.php' </script>";
+                exit;
             }
 
-            $_SESSION["vez"] = $num;
+            else{
+                $error = "Errado";
+            }
 
-            $error = "Acertou";
-
-            flush();
-            echo "<script> window.location.href = 'index.php' </script>";
-            exit;
         }
-
-        else{
-            $error = "Errado";
-        }
-
     }
-}
 ?>
 
 <!DOCTYPE html>
@@ -95,11 +91,11 @@ if(isset($_POST["resposta"])){
   <div class="credits-modal">
     <h2>Créditos</h2>
         <p><strong>Felipe Falcirolli</strong> — Full Stack Developer<br>
-        <em>Developed the user interface and interactive components</em><br>
+        <em>Desenvolveu a interface do usuário e os componentes interativos</em><br>
         <a href="https://github.com/lipe7k" target="_blank" rel="noopener noreferrer">Github</a>
         </p>
         <p><strong>Fellipe Teixeira</strong> — Backend Developer<br>
-        <em>Creator, back end maker and database analitics</em><br>
+        <em>Criador, criador de backend e analista de banco de dados</em><br>
             <a href="https://github.com/lipes40" target="_blank" rel="noopener noreferrer">Github</a>
         </p>
     <button onclick="fecharModal()" class="btn-fechar">Close </button>
@@ -109,16 +105,16 @@ if(isset($_POST["resposta"])){
 
 
     <header>
-        <h3 class="lingua">Language: <?php echo $lingua; ?></h3>
+        <h3 class="lingua">Lingua: <?php echo $lingua; ?></h3>
         <h1>Answer if you can</h1>
-        <h3 class="pessoa">Question asked by: <?php echo $nome; ?></h3>
+        <h3 class="pessoa">Questão feita por: <?php echo $nome; ?></h3>
     </header>
     
 
     <form action="" method="POST">
         <h3><?php echo $pergunta ?></h3>
         <input type="text" placeholder="Resposta" value="<?php echo $_POST["resposta"] ?? '' ?>" name="resposta" id="resposta">
-        <button type="submit">Send <i class="fas fa-paper-plane"></i></button>
+        <button type="submit">Enviar <i class="fas fa-paper-plane"></i></button>
     </form>
         <span><?php if($error != "") { echo $error; } ?></span>
 

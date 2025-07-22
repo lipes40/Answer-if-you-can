@@ -1,51 +1,51 @@
 <?php
 
-require("connector.php");
+    require("connector.php");
 
-$error = "";
+    $error = "";
 
-if(isset($_POST["nome"]) && isset($_POST["pergunta"]) && isset($_POST["resposta"])){
-    if(strlen($_POST["nome"]) == 0) {
-        $error = "Preencha seu nome!";
-    }
-    else{
-        if(strlen($_POST["pergunta"]) == 0){
-            $error = "Preencha a pergunta!";
+    if(isset($_POST["nome"]) && isset($_POST["pergunta"]) && isset($_POST["resposta"])){
+        if(strlen($_POST["nome"]) == 0) {
+            $error = "Preencha seu nome!";
         }
         else{
-            if(strlen($_POST["resposta"]) == 0){
-                $error = "Preencha a resposta!"; 
+            if(strlen($_POST["pergunta"]) == 0){
+                $error = "Preencha a pergunta!";
             }
             else{
+                if(strlen($_POST["resposta"]) == 0){
+                    $error = "Preencha a resposta!"; 
+                }
+                else{
 
-                $nome = $_POST["nome"];
-                $pergunta = $_POST["pergunta"];
-                $resposta = $_POST["resposta"];
-                $lingua = "Português";
+                    $nome = $_POST["nome"];
+                    $pergunta = $_POST["pergunta"];
+                    $resposta = $_POST["resposta"];
+                    $lingua = "Português";
 
-                if($nome == "ADM") {
-                    die("Você não é o ADM seu coco");
+                    if($nome == "ADM") {
+                        die("Você não é o ADM seu coco");
+                    }
+
+                    $sql = ("SELECT id FROM selections");
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute();
+
+                    $conjunto = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
+
+                    $id = max($conjunto) + 1;
+
+                    $sql = ("INSERT INTO selections (id, nome, pergunta, resposta, lingua) VALUES (?, ?, ?, ?, ?)");
+                    $stmt = $pdo->prepare($sql);
+                    $stmt->execute([$id, $nome, $pergunta, $resposta, $lingua]);
+
+                    Header("Location: index.php");
+                    exit;
                 }
 
-                $sql = ("SELECT id FROM resp");
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute();
-
-                $conjunto = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
-
-                $id = max($conjunto) + 1;
-
-                $sql = ("INSERT INTO resp (id, nome, pergunta, resposta, lingua) VALUES (?, ?, ?, ?, ?)");
-                $stmt = $pdo->prepare($sql);
-                $stmt->execute([$id, $nome, $pergunta, $resposta, $lingua]);
-
-                Header("Location: index.php");
-                exit;
             }
-
         }
     }
-}
 ?>
 
 <!DOCTYPE html>
