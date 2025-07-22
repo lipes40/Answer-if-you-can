@@ -33,7 +33,12 @@
 
                     $conjunto = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 
-                    $id = max($conjunto) + 1;
+                    if($conjunto){
+                        $id = max($conjunto) + 1;
+                    }
+                    else{
+                        $id = 1;
+                    }
 
                     $sql = ("INSERT INTO selections (id, nome, pergunta, resposta, lingua) VALUES (?, ?, ?, ?, ?)");
                     $stmt = $pdo->prepare($sql);
