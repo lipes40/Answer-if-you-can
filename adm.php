@@ -8,7 +8,7 @@ if(!isset($_SESSION["verify"]))
     $_SESSION["verify"] = false;
 
 $error = "";
-$senha_certa = "Adm1234";
+$senha_certa = "";
 
 if(isset($_POST["senha"])){
     if(strlen($_POST["senha"] == 0)){
