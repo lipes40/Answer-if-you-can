@@ -8,7 +8,8 @@ $dbname = "respostas";
 $host = "localhost";
 
 try{
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $usuario, $senha);
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $usuario, $senha);
+    
 }
 
 catch(PDOException $e) {
